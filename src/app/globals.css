@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    text-rendering: optimizeLegibility;
+  }
+}
+
+body {
+  @apply min-h-screen text-ink antialiased;
+  background-color: #e7eaee;
+  background-image: radial-gradient(
+      ellipse 100% 70% at 50% -30%,
+      rgba(30, 58, 95, 0.06),
+      transparent 52%
+    ),
+    linear-gradient(180deg, #ebeef2 0%, #e7eaee 55%, #e3e7ec 100%);
+}
+
+@layer utilities {
+  .scrollbar-conceal {
+    scrollbar-width: none;
+  }
+  .scrollbar-conceal::-webkit-scrollbar {
+    display: none;
+  }
+
+  /** Gradient fill on text (WebKit needs text-fill + clip; plain text-transparent can “disappear”) */
+  .text-gradient-brand-accent {
+    display: inline-block;
+    background-image: linear-gradient(
+      115deg,
+      #1e3a5f,
+      #4f46e5 48%,
+      #0f766e
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+}

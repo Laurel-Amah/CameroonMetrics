@@ -1,0 +1,36 @@
+import type { Metadata } from "next";
+import { SectorsBoard } from "@/components/sectors/SectorsBoard";
+import { SectorsJumpNav } from "@/components/sectors/SectorsJumpNav";
+import { getPublishedPreviewsForPublicSite } from "@/lib/db/articles";
+
+export const metadata: Metadata = {
+  title: "Sectors · CameroonMetrics",
+  description:
+    "Industry-organized coverage—banking, energy, agriculture, and more.",
+};
+
+export const dynamic = "force-dynamic";
+
+export default async function SectorsPage() {
+  const articles = await getPublishedPreviewsForPublicSite();
+
+  return (
+    <div className="mx-auto max-w-6xl px-4 pb-24 pt-10 sm:px-6 sm:pb-28 sm:pt-12 lg:px-8 lg:pb-32">
+      <header className="mb-6 max-w-3xl">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-ink-subtle">
+          Industry lens
+        </p>
+        <h1 className="mt-3 font-serif text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
+          Sectors
+        </h1>
+        <p className="mt-4 text-sm leading-relaxed text-ink-muted sm:text-base">
+          Stories grouped by sector from the desk catalogue—useful for scanning
+          exposure across industries.
+        </p>
+      </header>
+
+      <SectorsJumpNav />
+      <SectorsBoard articles={articles} />
+    </div>
+  );
+}
