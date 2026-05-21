@@ -16,8 +16,12 @@ export default async function SectorsPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 pb-24 pt-10 sm:px-6 sm:pb-28 sm:pt-12 lg:px-8 lg:pb-32">
-      <header className="mb-6 max-w-3xl">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-ink-subtle">
+      <header className="relative mb-6 max-w-3xl">
+        <div
+          className="pointer-events-none absolute -left-2 top-8 h-20 w-20 rounded-full bg-indigo-400/10 blur-2xl"
+          aria-hidden
+        />
+        <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-indigo-700">
           Industry lens
         </p>
         <h1 className="mt-3 font-serif text-3xl font-semibold tracking-tight text-ink sm:text-4xl">

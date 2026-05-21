@@ -2,7 +2,9 @@
 --
 -- Run order (Supabase SQL editor):
 --   1) Paste and run: supabase/migrations/0001_init.sql  (creates public.articles, RLS, storage bucket)
---   2) Paste and run: this file (seed.sql)
+--   2) Paste and run: supabase/migrations/0002_fx_daily_cache.sql  (Markets FX cache; optional but removes PostgREST "schema cache" errors)
+--   2b) Paste and run: supabase/migrations/0003_article_sources_citations.sql  (multiple sources + citations on articles)
+--   3) Paste and run: this file (seed.sql)
 --
 do $$
 begin

@@ -1,4 +1,9 @@
 import { NextResponse } from "next/server";
+import {
+  draftsToSourcesJson,
+  legacySourceColumns,
+} from "@/lib/article-sources";
+import type { SourceDraft } from "@/lib/article-sources";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 type PatchBody = {
@@ -10,6 +15,8 @@ type PatchBody = {
   whatHappened?: string;
   whyItMatters?: string;
   investorInsight?: string;
+  sources?: SourceDraft[];
+  citations?: string;
   source?: {
     url?: string;
     name?: string;
@@ -44,7 +51,11 @@ export async function PATCH(
     if (typeof body.whyItMatters === "string") patch.why_it_matters = body.whyItMatters;
     if (typeof body.investorInsight === "string") patch.investor_insight = body.investorInsight;
 
-    if (body.source) {
+    if (body.sources !== undefined) {
+      const normalized = draftsToSourcesJson(body.sources);
+      patch.sources = normalized;
+      Object.assign(patch, legacySourceColumns(normalized));
+    } else if (body.source) {
       const s = body.source;
       if (s.url !== undefined) patch.source_url = s.url?.trim() || null;
       if (s.name !== undefined) patch.source_name = s.name?.trim() || null;
@@ -52,6 +63,10 @@ export async function PATCH(
       if (s.publishedAt !== undefined) {
         patch.source_published_at = s.publishedAt?.trim() || null;
       }
+    }
+
+    if (body.citations !== undefined) {
+      patch.citations = body.citations.trim() || null;
     }
 
     const { error } = await supabase.from("articles").update(patch).eq("id", id);

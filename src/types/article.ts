@@ -32,4 +32,8 @@ export type Article = ArticlePreview & {
   whatHappened: string;
   whyItMatters: string;
   investorInsight: string;
+  /** Additional sources beyond `source` (detail page). */
+  sources?: ArticleSource[];
+  /** Free-form citations, footnotes, or reference notes. */
+  citations?: string;
 };

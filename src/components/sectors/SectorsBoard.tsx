@@ -3,6 +3,7 @@ import {
   articlesForSector,
   SECTOR_DEFINITIONS,
 } from "@/data/sector-definitions";
+import { sectorAccentClass } from "@/lib/sector-styles";
 import type { ArticlePreview } from "@/types/article";
 
 type Props = {
@@ -14,17 +15,23 @@ export function SectorsBoard({ articles }: Props) {
     <div className="space-y-14 sm:space-y-16">
       {SECTOR_DEFINITIONS.map((sector) => {
         const list = articlesForSector(sector, articles).slice(0, 3);
+        const accent = sectorAccentClass[sector.id];
         return (
           <section
             key={sector.id}
             id={sector.id}
             aria-labelledby={`${sector.id}-heading`}
-            className="scroll-mt-28"
+            className={`scroll-mt-28 border-l-[3px] pl-5 sm:pl-6 ${accent.bar}`}
           >
             <div className="border-b border-brand/15 pb-5">
+              <p
+                className={`text-[10px] font-semibold uppercase tracking-[0.22em] ${accent.kicker}`}
+              >
+                Sector
+              </p>
               <h2
                 id={`${sector.id}-heading`}
-                className="font-serif text-2xl font-semibold tracking-tight text-ink sm:text-3xl"
+                className="mt-1 font-serif text-2xl font-semibold tracking-tight text-ink sm:text-3xl"
               >
                 {sector.label}
               </h2>

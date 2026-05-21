@@ -24,8 +24,8 @@ export function FeaturedStory({ article }: Props) {
     <section aria-labelledby="featured-heading" className="mb-14 sm:mb-16">
       <div className="mb-6 flex flex-col gap-2 border-b border-brand/15 pb-6 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.34em] text-ink-subtle">
-            Desk
+          <p className="text-[10px] font-semibold uppercase tracking-[0.34em] text-accent">
+            Desk pick
           </p>
           <h2
             id="featured-heading"

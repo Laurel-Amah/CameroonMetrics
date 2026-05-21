@@ -32,6 +32,8 @@ export async function POST() {
       source_name: null,
       source_author: null,
       source_published_at: null,
+      sources: [],
+      citations: null,
       original_input: null,
       suggested_image_url: null,
       ai_model: null,

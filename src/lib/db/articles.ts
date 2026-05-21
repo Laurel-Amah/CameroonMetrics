@@ -12,6 +12,24 @@ function isMissingEnv(e: unknown): boolean {
   return e instanceof Error && e.message.includes("NEXT_PUBLIC_SUPABASE");
 }
 
+/** DNS/network failures when calling Supabase should not 500 public pages. */
+function isSupabaseConnectionError(e: unknown): boolean {
+  if (isMissingEnv(e)) return false;
+  const collect = (x: unknown): string => {
+    if (x instanceof Error) {
+      return `${x.message} ${x.cause instanceof Error ? x.cause.message : ""}`;
+    }
+    if (typeof x === "object" && x !== null && "message" in x) {
+      return String((x as { message: unknown }).message);
+    }
+    return String(x);
+  };
+  const msg = collect(e);
+  return /fetch failed|ENOTFOUND|ECONNREFUSED|ETIMEDOUT|getaddrinfo|network/i.test(
+    msg,
+  );
+}
+
 /** True when public anon reads should use Supabase instead of local mocks. */
 export function isSupabaseConfigured(): boolean {
   return Boolean(
@@ -96,6 +114,12 @@ export async function getPublishedPreviewsSafe(): Promise<ArticlePreview[]> {
     return listPublishedPreviews(client);
   } catch (e) {
     if (isMissingEnv(e)) return [];
+    if (isSupabaseConnectionError(e)) {
+      if (process.env.NODE_ENV === "development") {
+        console.warn("[articles] Supabase unreachable; home feed empty.", e);
+      }
+      return [];
+    }
     throw e;
   }
 }
@@ -106,6 +130,12 @@ export async function getArticleBySlugSafe(slug: string): Promise<Article | null
     return getArticleBySlug(client, slug);
   } catch (e) {
     if (isMissingEnv(e)) return null;
+    if (isSupabaseConnectionError(e)) {
+      if (process.env.NODE_ENV === "development") {
+        console.warn("[articles] Supabase unreachable; article not loaded.", e);
+      }
+      return null;
+    }
     throw e;
   }
 }
@@ -116,6 +146,12 @@ export async function listPublishedSlugsSafe(): Promise<string[]> {
     return listPublishedSlugs(client);
   } catch (e) {
     if (isMissingEnv(e)) return [];
+    if (isSupabaseConnectionError(e)) {
+      if (process.env.NODE_ENV === "development") {
+        console.warn("[articles] Supabase unreachable; no DB slugs.", e);
+      }
+      return [];
+    }
     throw e;
   }
 }

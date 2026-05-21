@@ -1,3 +1,5 @@
+import { sourcesFromRow, sourcesToDrafts } from "@/lib/article-sources";
+import type { SourceDraft } from "@/lib/article-sources";
 import type { ArticleRow } from "@/lib/db/article-row";
 import type { ArticleCategory } from "@/types/article";
 
@@ -13,10 +15,8 @@ export type DraftEditorInitial = {
   whatHappened: string;
   whyItMatters: string;
   investorInsight: string;
-  sourceUrl: string;
-  sourceName: string;
-  sourceAuthor: string;
-  sourcePublishedAt: string;
+  sources: SourceDraft[];
+  citations: string;
   /** Present when draft was created from URL/text for AI regenerate */
   originalInput: string | null;
 };
@@ -34,10 +34,8 @@ export function rowToDraftEditorInitial(row: ArticleRow): DraftEditorInitial {
     whatHappened: row.what_happened,
     whyItMatters: row.why_it_matters,
     investorInsight: row.investor_insight,
-    sourceUrl: row.source_url ?? "",
-    sourceName: row.source_name ?? "",
-    sourceAuthor: row.source_author ?? "",
-    sourcePublishedAt: row.source_published_at ?? "",
+    sources: sourcesToDrafts(sourcesFromRow(row)),
+    citations: row.citations ?? "",
     originalInput: row.original_input,
   };
 }

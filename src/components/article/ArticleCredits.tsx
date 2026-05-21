@@ -1,36 +1,40 @@
 import type { ArticleSource } from "@/types/article";
+import { hasSourceContent } from "@/lib/article-sources";
 import { formatArticleDate } from "@/lib/format-date";
-
-function hasCredits(s?: ArticleSource) {
-  if (!s) return false;
-  return !!(s.url?.trim() || s.name?.trim() || s.author?.trim() || s.publishedAt?.trim());
-}
 
 type Props = {
   source?: ArticleSource;
+  sources?: ArticleSource[];
+  citations?: string;
 };
 
-export function ArticleCredits({ source }: Props) {
-  if (!hasCredits(source)) return null;
-
+function SourceBlock({
+  source,
+  index,
+  total,
+}: {
+  source: ArticleSource;
+  index: number;
+  total: number;
+}) {
   const dateLabel =
-    source?.publishedAt && source.publishedAt.length >= 8
+    source.publishedAt && source.publishedAt.length >= 8
       ? formatArticleDate(source.publishedAt)
-      : source?.publishedAt?.trim() || null;
+      : source.publishedAt?.trim() || null;
 
   return (
-    <section
-      className="rounded-xl border border-line bg-surface/90 p-6 shadow-card ring-1 ring-brand/5 sm:p-8"
-      aria-labelledby="credits-heading"
+    <div
+      className={
+        total > 1 ? "border-t border-line pt-6 first:border-0 first:pt-0" : ""
+      }
     >
-      <h2
-        id="credits-heading"
-        className="border-b border-line pb-4 font-sans text-[11px] font-semibold uppercase tracking-[0.22em] text-ink-subtle"
-      >
-        Source and credits
-      </h2>
-      <dl className="mt-6 space-y-4 text-sm leading-relaxed text-ink">
-        {source?.name?.trim() ? (
+      {total > 1 ? (
+        <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-subtle">
+          Source {index + 1}
+        </p>
+      ) : null}
+      <dl className="space-y-4 text-sm leading-relaxed text-ink">
+        {source.name?.trim() ? (
           <div>
             <dt className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-subtle">
               Publication
@@ -38,7 +42,7 @@ export function ArticleCredits({ source }: Props) {
             <dd className="mt-1">{source.name.trim()}</dd>
           </div>
         ) : null}
-        {source?.author?.trim() ? (
+        {source.author?.trim() ? (
           <div>
             <dt className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-subtle">
               Author
@@ -54,7 +58,7 @@ export function ArticleCredits({ source }: Props) {
             <dd className="mt-1">{dateLabel}</dd>
           </div>
         ) : null}
-        {source?.url?.trim() ? (
+        {source.url?.trim() ? (
           <div>
             <dt className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-subtle">
               Original story
@@ -72,9 +76,55 @@ export function ArticleCredits({ source }: Props) {
           </div>
         ) : null}
       </dl>
+    </div>
+  );
+}
+
+export function ArticleCredits({ source, sources, citations }: Props) {
+  const list =
+    sources && sources.length > 0
+      ? sources.filter(hasSourceContent)
+      : source && hasSourceContent(source)
+        ? [source]
+        : [];
+
+  const citationsText = citations?.trim();
+  if (list.length === 0 && !citationsText) return null;
+
+  return (
+    <section
+      className="rounded-xl border border-line bg-surface/90 p-6 shadow-card ring-1 ring-brand/5 sm:p-8"
+      aria-labelledby="credits-heading"
+    >
+      <h2
+        id="credits-heading"
+        className="border-b border-line pb-4 font-sans text-[11px] font-semibold uppercase tracking-[0.22em] text-ink-subtle"
+      >
+        Sources and credits
+      </h2>
+
+      {list.length > 0 ? (
+        <div className="mt-6 space-y-6">
+          {list.map((s, i) => (
+            <SourceBlock key={i} source={s} index={i} total={list.length} />
+          ))}
+        </div>
+      ) : null}
+
+      {citationsText ? (
+        <div className={list.length > 0 ? "mt-8 border-t border-line pt-6" : "mt-6"}>
+          <h3 className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-subtle">
+            Citations
+          </h3>
+          <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-ink">
+            {citationsText}
+          </p>
+        </div>
+      ) : null}
+
       <p className="mt-6 text-xs leading-relaxed text-ink-subtle">
-        CameroonMetrics analysis is original synthesis. Facts attributed to the
-        source above; interpretation is the desk&apos;s own.
+        CameroonMetrics analysis is original synthesis. Facts attributed to sources
+        above; interpretation is the desk&apos;s own.
       </p>
     </section>
   );

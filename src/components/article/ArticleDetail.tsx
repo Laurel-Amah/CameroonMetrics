@@ -18,8 +18,8 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-xl border border-line bg-surface/90 p-6 shadow-card ring-1 ring-brand/5 sm:p-8">
-      <h2 className="border-b border-line pb-4 font-sans text-[11px] font-semibold uppercase tracking-[0.22em] text-ink-subtle">
+    <section className="rounded-xl border border-line bg-surface/90 p-6 shadow-card ring-1 ring-brand/10 sm:p-8">
+      <h2 className="border-b border-brand/15 pb-4 font-sans text-[11px] font-semibold uppercase tracking-[0.22em] text-brand">
         {kicker}
       </h2>
       <div className="mt-6 max-w-none text-[1.05rem] font-normal leading-[1.72] text-ink sm:text-lg sm:leading-[1.75]">
@@ -95,7 +95,11 @@ export function ArticleDetail({ article }: Props) {
         </div>
 
         <div className="mt-12 sm:mt-14">
-          <ArticleCredits source={article.source} />
+          <ArticleCredits
+            sources={article.sources}
+            source={article.source}
+            citations={article.citations}
+          />
         </div>
 
         <footer className="mt-14 border-t border-line pt-10 sm:mt-16 sm:pt-12">

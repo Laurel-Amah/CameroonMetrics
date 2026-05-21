@@ -2,10 +2,15 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { SourceFieldsEditor } from "@/components/admin/SourceFieldsEditor";
 import { ArticleCredits } from "@/components/article/ArticleCredits";
 import { ARTICLE_CATEGORIES } from "@/lib/ai/article-schema";
+import {
+  draftsToSourcesJson,
+  normalizeSourceDraft,
+} from "@/lib/article-sources";
+import type { SourceDraft } from "@/lib/article-sources";
 import type { DraftEditorInitial } from "@/lib/db/draft-editor-state";
-import type { ArticleSource } from "@/types/article";
 
 const inputClass =
   "mt-1.5 w-full rounded-lg border border-line bg-surface-soft px-3 py-2 text-sm text-ink outline-none focus:border-brand/40 focus:ring-2 focus:ring-brand/25";
@@ -26,24 +31,15 @@ export function DraftEditorForm({ initial }: Props) {
   const [whatHappened, setWhatHappened] = useState(initial.whatHappened);
   const [whyItMatters, setWhyItMatters] = useState(initial.whyItMatters);
   const [investorInsight, setInvestorInsight] = useState(initial.investorInsight);
-  const [sourceUrl, setSourceUrl] = useState(initial.sourceUrl);
-  const [sourceName, setSourceName] = useState(initial.sourceName);
-  const [sourceAuthor, setSourceAuthor] = useState(initial.sourceAuthor);
-  const [sourcePublishedAt, setSourcePublishedAt] = useState(
-    initial.sourcePublishedAt,
-  );
+  const [sources, setSources] = useState<SourceDraft[]>(initial.sources);
+  const [citations, setCitations] = useState(initial.citations);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const previewSource: ArticleSource = useMemo(
-    () => ({
-      url: sourceUrl || undefined,
-      name: sourceName || undefined,
-      author: sourceAuthor || undefined,
-      publishedAt: sourcePublishedAt || undefined,
-    }),
-    [sourceUrl, sourceName, sourceAuthor, sourcePublishedAt],
+  const previewSources = useMemo(
+    () => draftsToSourcesJson(sources),
+    [sources],
   );
 
   const id = initial.internalId;
@@ -59,12 +55,8 @@ export function DraftEditorForm({ initial }: Props) {
       whatHappened,
       whyItMatters,
       investorInsight,
-      source: {
-        url: sourceUrl,
-        name: sourceName,
-        author: sourceAuthor,
-        publishedAt: sourcePublishedAt,
-      },
+      sources: sources.map(normalizeSourceDraft),
+      citations,
     };
   }
 
@@ -390,61 +382,31 @@ export function DraftEditorForm({ initial }: Props) {
 
       <section className="space-y-5 rounded-2xl border border-line bg-surface/95 p-6 shadow-panel sm:p-8">
         <h2 className="font-serif text-lg font-semibold text-ink">
-          Source and credits
+          Sources and citations
         </h2>
         <p className="text-sm text-ink-muted">
-          These fields render on the public article page. Fill them even when the
-          story started from pasted text so readers always see attribution.
+          Add every outlet or document you relied on. Citations can include
+          footnotes, report titles, or other references that do not fit a single
+          URL.
         </p>
+
+        <SourceFieldsEditor
+          sources={sources}
+          onChange={setSources}
+          disabled={busy}
+        />
+
         <div>
-          <label htmlFor="srcUrl" className={labelClass}>
-            Source URL
+          <label htmlFor="citations" className={labelClass}>
+            Citations and references
           </label>
-          <input
-            id="srcUrl"
-            type="url"
-            value={sourceUrl}
-            onChange={(e) => setSourceUrl(e.target.value)}
+          <textarea
+            id="citations"
+            rows={5}
+            value={citations}
+            onChange={(e) => setCitations(e.target.value)}
             className={inputClass}
-            placeholder="https://…"
-          />
-        </div>
-        <div>
-          <label htmlFor="srcName" className={labelClass}>
-            Publication / outlet name
-          </label>
-          <input
-            id="srcName"
-            value={sourceName}
-            onChange={(e) => setSourceName(e.target.value)}
-            className={inputClass}
-          />
-        </div>
-        <div>
-          <label htmlFor="srcAuthor" className={labelClass}>
-            Author byline
-          </label>
-          <input
-            id="srcAuthor"
-            value={sourceAuthor}
-            onChange={(e) => setSourceAuthor(e.target.value)}
-            className={inputClass}
-          />
-        </div>
-        <div>
-          <label htmlFor="srcPub" className={labelClass}>
-            Original publish date
-          </label>
-          <input
-            id="srcPub"
-            type="date"
-            value={
-              sourcePublishedAt.length >= 10
-                ? sourcePublishedAt.slice(0, 10)
-                : ""
-            }
-            onChange={(e) => setSourcePublishedAt(e.target.value)}
-            className={inputClass}
+            placeholder="e.g. BEAC communiqué, 12 Mar 2026; IMF WEO 2025, Table 1.1…"
           />
         </div>
 
@@ -453,7 +415,7 @@ export function DraftEditorForm({ initial }: Props) {
             Live credits preview
           </p>
           <div className="mt-4">
-            <ArticleCredits source={previewSource} />
+            <ArticleCredits sources={previewSources} citations={citations} />
           </div>
         </div>
       </section>

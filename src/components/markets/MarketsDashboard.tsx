@@ -1,61 +1,36 @@
-import type {
-  CommodityRow,
-  MacroCard,
-  QuoteRow,
-} from "@/data/mock-market-snapshot";
+import type { QuoteRow } from "@/types/markets";
 
-function TrendGlyph({ trend }: { trend?: MacroCard["trend"] }) {
-  if (trend === "up") return <span className="text-brand">▲</span>;
-  if (trend === "down") return <span className="text-rose-600">▼</span>;
-  return <span className="text-ink-subtle">■</span>;
-}
-
-function MacroGrid({ cards }: { cards: MacroCard[] }) {
-  return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {cards.map((c) => (
-        <div
-          key={c.id}
-          className="rounded-xl border border-line bg-surface/90 p-5 shadow-card ring-1 ring-brand/5"
-        >
-          <div className="flex items-start justify-between gap-3">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-subtle">
-              {c.label}
-            </p>
-            <span className="text-xs" aria-hidden>
-              <TrendGlyph trend={c.trend} />
-            </span>
-          </div>
-          <p className="mt-4 font-serif text-3xl font-semibold tabular-nums tracking-tight text-ink">
-            {c.value}
-          </p>
-          <p className="mt-2 text-sm leading-snug text-ink-muted">{c.sublabel}</p>
-        </div>
-      ))}
-    </div>
-  );
+function changeClass(changePct: string): string {
+  if (changePct.startsWith("+")) return "text-emerald-700";
+  if (changePct.startsWith("-")) return "text-rose-700";
+  return "text-ink-muted";
 }
 
 function QuotesTable({ rows }: { rows: QuoteRow[] }) {
   return (
-    <div className="overflow-x-auto rounded-xl border border-line bg-surface/90 shadow-card ring-1 ring-brand/5">
+    <div className="overflow-x-auto rounded-xl border border-line bg-surface/90 shadow-card ring-1 ring-teal-500/10">
+      <div
+        className="h-0.5 bg-gradient-to-r from-brand/50 via-teal-500/60 to-indigo-400/40"
+        aria-hidden
+      />
       <table className="min-w-full text-left text-sm">
         <thead>
-          <tr className="border-b border-line text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-subtle">
+          <tr className="border-b border-line bg-brand-soft/40 text-[11px] font-semibold uppercase tracking-[0.16em] text-brand">
             <th className="px-4 py-3 sm:px-5">Pair</th>
             <th className="px-4 py-3 sm:px-5">Bid</th>
             <th className="px-4 py-3 sm:px-5">Ask</th>
             <th className="px-4 py-3 sm:px-5">Chg</th>
-            <th className="hidden px-4 py-3 sm:table-cell sm:px-5">Note</th>
           </tr>
         </thead>
         <tbody>
-          {rows.map((r) => (
+          {rows.map((r, i) => (
             <tr
               key={r.pair}
-              className="border-b border-line/80 last:border-0 hover:bg-surface-soft/80"
+              className={`border-b border-line/80 last:border-0 transition-colors hover:bg-teal-500/[0.04] ${
+                i % 2 === 1 ? "bg-surface-soft/30" : ""
+              }`}
             >
-              <td className="px-4 py-3.5 font-semibold text-ink sm:px-5">
+              <td className="px-4 py-3.5 font-semibold text-brand sm:px-5">
                 {r.pair}
               </td>
               <td className="px-4 py-3.5 tabular-nums text-ink-muted sm:px-5">
@@ -64,11 +39,10 @@ function QuotesTable({ rows }: { rows: QuoteRow[] }) {
               <td className="px-4 py-3.5 tabular-nums text-ink-muted sm:px-5">
                 {r.ask}
               </td>
-              <td className="px-4 py-3.5 tabular-nums font-medium text-ink sm:px-5">
+              <td
+                className={`px-4 py-3.5 tabular-nums font-semibold sm:px-5 ${changeClass(r.changePct)}`}
+              >
                 {r.changePct}
-              </td>
-              <td className="hidden px-4 py-3.5 text-ink-subtle sm:table-cell sm:px-5">
-                {r.note}
               </td>
             </tr>
           ))}
@@ -78,77 +52,61 @@ function QuotesTable({ rows }: { rows: QuoteRow[] }) {
   );
 }
 
-function CommodityList({ rows }: { rows: CommodityRow[] }) {
-  return (
-    <ul className="divide-y divide-line rounded-xl border border-line bg-surface/90 shadow-card ring-1 ring-brand/5">
-      {rows.map((r) => (
-        <li
-          key={r.name}
-          className="flex flex-col gap-1 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5"
-        >
-          <div>
-            <p className="font-semibold text-ink">{r.name}</p>
-            <p className="text-xs text-ink-subtle">{r.unit}</p>
-          </div>
-          <div className="flex items-baseline gap-4 sm:text-right">
-            <p className="font-serif text-xl font-semibold tabular-nums text-ink">
-              {r.last}
-            </p>
-            <p className="text-xs font-medium text-ink-muted">{r.session}</p>
-          </div>
-        </li>
-      ))}
-    </ul>
-  );
-}
 
-type Props = {
-  overview: MacroCard[];
-  currencies: QuoteRow[];
-  commodities: CommodityRow[];
+export type FxMeta = {
+  rateDate: string;
+  fetchedAt: string;
+  baseCurrency: string;
 };
 
-export function MarketsDashboard({
-  overview,
-  currencies,
-  commodities,
-}: Props) {
-  return (
-    <div className="space-y-12 sm:space-y-14">
-      <section aria-labelledby="overview-heading">
-        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-          <h2
-            id="overview-heading"
-            className="font-serif text-xl font-semibold tracking-tight text-ink sm:text-2xl"
-          >
-            Market overview
-          </h2>
-          <p className="max-w-lg text-sm text-ink-muted">
-            Mock snapshot for layout—no live feed or execution.
-          </p>
-        </div>
-        <MacroGrid cards={overview} />
-      </section>
+type Props = {
+  currencies: QuoteRow[];
+  meta: FxMeta | null;
+};
 
-      <section aria-labelledby="fx-heading">
+export function MarketsDashboard({ currencies, meta }: Props) {
+  if (!meta || currencies.length === 0) {
+    return (
+      <div className="rounded-xl border border-dashed border-line bg-surface/60 px-6 py-12 text-center">
+        <p className="font-serif text-lg font-semibold text-ink">
+          FX data not available
+        </p>
+        <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-ink-muted">
+          Rates are not available yet. Check back after the next daily update.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <section
+      aria-labelledby="fx-heading"
+      className="rounded-2xl border border-line bg-surface/80 p-5 shadow-card ring-1 ring-teal-500/10 sm:p-7"
+    >
+      <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <h2
           id="fx-heading"
-          className="mb-5 font-serif text-xl font-semibold tracking-tight text-ink sm:text-2xl"
+          className="font-serif text-xl font-semibold tracking-tight text-ink sm:text-2xl"
         >
-          Currencies
+          <span className="text-teal-700">Currencies</span>
         </h2>
-        <QuotesTable rows={currencies} />
-      </section>
-
-      <section aria-labelledby="com-heading">
-        <h2
-          id="com-heading"
-          className="mb-5 font-serif text-xl font-semibold tracking-tight text-ink sm:text-2xl"
+        <p className="text-sm text-ink-muted">
+          As of{" "}
+          <time dateTime={meta.rateDate}>{meta.rateDate}</time>
+        </p>
+      </div>
+      <QuotesTable rows={currencies} />
+      <p className="mt-4 text-xs text-ink-subtle">
+        Indicative only · Data via{" "}
+        <a
+          href="https://exchangerate.host/"
+          className="underline decoration-line underline-offset-2 hover:text-ink-muted"
+          rel="noopener noreferrer"
+          target="_blank"
         >
-          Commodities
-        </h2>
-        <CommodityList rows={commodities} />
-      </section>
-    </div>
+          exchangerate.host
+        </a>
+      </p>
+    </section>
   );
 }

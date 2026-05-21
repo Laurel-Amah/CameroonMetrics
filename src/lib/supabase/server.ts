@@ -60,3 +60,18 @@ export function createSupabaseAnonClient() {
     },
   });
 }
+
+/** Same as createSupabaseAnonClient when env is set; otherwise null (e.g. local layout without Supabase). */
+export function createSupabaseAnonClientNullable() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !anon) return null;
+  return createServerClient(url, anon, {
+    cookies: {
+      getAll() {
+        return [];
+      },
+      setAll() {},
+    },
+  });
+}

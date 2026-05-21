@@ -1,3 +1,7 @@
+import {
+  primarySource,
+  sourcesFromRow,
+} from "@/lib/article-sources";
 import type { Article, ArticlePreview, ArticleSource } from "@/types/article";
 import type { ArticleCategory } from "@/types/article";
 
@@ -16,6 +20,8 @@ export type ArticleRow = {
   source_name: string | null;
   source_author: string | null;
   source_published_at: string | null;
+  sources: unknown;
+  citations: string | null;
   original_input: string | null;
   suggested_image_url: string | null;
   ai_model: string | null;
@@ -26,14 +32,8 @@ export type ArticleRow = {
   created_by: string | null;
 };
 
-function rowSource(row: ArticleRow): ArticleSource | undefined {
-  const s: ArticleSource = {};
-  if (row.source_url) s.url = row.source_url;
-  if (row.source_name) s.name = row.source_name;
-  if (row.source_author) s.author = row.source_author;
-  if (row.source_published_at) s.publishedAt = row.source_published_at;
-  if (!s.url && !s.name && !s.author && !s.publishedAt) return undefined;
-  return s;
+function rowSources(row: ArticleRow): ArticleSource[] {
+  return sourcesFromRow(row);
 }
 
 function publishedDateOnly(iso: string | null): string {
@@ -49,16 +49,19 @@ export function rowToArticlePreview(row: ArticleRow): ArticlePreview {
     publishedAt: publishedDateOnly(row.published_at),
     preview: row.preview,
     imageSrc: row.image_src,
-    source: rowSource(row),
+    source: primarySource(rowSources(row)),
   };
 }
 
 export function rowToArticle(row: ArticleRow): Article {
   const preview = rowToArticlePreview(row);
+  const sources = rowSources(row);
   return {
     ...preview,
     whatHappened: row.what_happened,
     whyItMatters: row.why_it_matters,
     investorInsight: row.investor_insight,
+    sources: sources.length > 0 ? sources : undefined,
+    citations: row.citations?.trim() || undefined,
   };
 }
