@@ -18,9 +18,9 @@ export const sectorAccentClass: Record<
   },
   agriculture: {
     chip:
-      "border-emerald-200/90 bg-emerald-50 text-emerald-950 ring-1 ring-emerald-300/40 hover:border-emerald-400 hover:bg-emerald-100/90",
-    bar: "border-l-emerald-600",
-    kicker: "text-emerald-700",
+      "border-lime-200/90 bg-lime-50 text-lime-950 ring-1 ring-lime-400/40 hover:border-lime-500 hover:bg-lime-100/90",
+    bar: "border-l-lime-600",
+    kicker: "text-lime-700",
   },
   tech: {
     chip:
@@ -39,5 +39,23 @@ export const sectorAccentClass: Record<
       "border-indigo-200/90 bg-indigo-50 text-indigo-950 ring-1 ring-indigo-300/40 hover:border-indigo-400 hover:bg-indigo-100/90",
     bar: "border-l-indigo-500",
     kicker: "text-indigo-700",
+  },
+  "real-estate": {
+    chip:
+      "border-rose-200/90 bg-rose-50 text-rose-950 ring-1 ring-rose-300/40 hover:border-rose-400 hover:bg-rose-100/90",
+    bar: "border-l-rose-500",
+    kicker: "text-rose-700",
+  },
+  entrepreneurship: {
+    chip:
+      "border-orange-200/90 bg-orange-50 text-orange-950 ring-1 ring-orange-300/40 hover:border-orange-400 hover:bg-orange-100/90",
+    bar: "border-l-orange-500",
+    kicker: "text-orange-700",
+  },
+  markets: {
+    chip:
+      "border-slate-200/90 bg-slate-50 text-slate-950 ring-1 ring-slate-300/40 hover:border-slate-400 hover:bg-slate-100/90",
+    bar: "border-l-slate-500",
+    kicker: "text-slate-700",
   },
 };

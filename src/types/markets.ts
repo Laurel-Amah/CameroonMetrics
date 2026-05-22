@@ -5,3 +5,10 @@ export type QuoteRow = {
   changePct: string;
   note: string;
 };
+
+export type CommodityRow = {
+  name: string;
+  unit: string;
+  last: string;
+  session: string;
+};

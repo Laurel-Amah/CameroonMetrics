@@ -26,7 +26,7 @@ export function SiteHeader() {
             <span className="mx-1.5 text-brand/50" aria-hidden>
               ·
             </span>
-            <span className="text-ink-subtle">Regional markets</span>
+            <span className="text-ink-subtle">Business & economy</span>
           </span>
         </Link>
         <div className="flex shrink-0 items-center justify-end gap-2 sm:gap-3">

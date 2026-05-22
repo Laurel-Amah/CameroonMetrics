@@ -1,14 +1,4 @@
-import type { ArticleCategory, ArticlePreview } from "@/types/article";
-
-/** Category chips on the home Market Wire (fixed order; not derived from data). */
-export const HOME_WIRE_CATEGORIES: ArticleCategory[] = [
-  "Banking",
-  "Energy",
-  "Markets",
-  "Policy",
-  "Tech",
-  "Trade",
-];
+import type { ArticlePreview } from "@/types/article";
 
 export function sortArticlesByDateDesc(
   articles: ArticlePreview[],

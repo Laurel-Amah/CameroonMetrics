@@ -41,7 +41,7 @@ export function SectorsBoard({ articles }: Props) {
             </div>
             {list.length === 0 ? (
               <p className="mt-8 rounded-xl border border-dashed border-brand/25 bg-brand-soft/40 px-5 py-10 text-center text-sm text-ink-muted">
-                No mock stories mapped to this sector yet.
+                No published stories in this sector yet.
               </p>
             ) : (
               <ul className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-7 lg:grid-cols-3">

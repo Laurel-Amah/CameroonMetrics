@@ -1,33 +1,55 @@
 import type { Metadata } from "next";
 import { MarketsDashboard } from "@/components/markets/MarketsDashboard";
-import type { FxMeta } from "@/components/markets/MarketsDashboard";
+import type {
+  CommoditiesMeta,
+  FxMeta,
+} from "@/components/markets/MarketsDashboard";
+import {
+  cacheRowToCommodityRows,
+  getCommoditiesDailyCache,
+} from "@/lib/db/commodities-cache";
 import { cacheRowToQuoteRows, getFxDailyCache } from "@/lib/db/fx-cache";
 import { createSupabaseAnonClientNullable } from "@/lib/supabase/server";
-import type { QuoteRow } from "@/types/markets";
+import type { CommodityRow, QuoteRow } from "@/types/markets";
 
 export const metadata: Metadata = {
   title: "Markets · CameroonMetrics",
-  description: "Daily FX crosses for Cameroon and CEMAC.",
+  description:
+    "Daily FX crosses and commodity snapshots for Cameroon and CEMAC.",
 };
 
 export const dynamic = "force-dynamic";
 
 export default async function MarketsPage() {
   let currencies: QuoteRow[] = [];
-  let meta: FxMeta | null = null;
+  let fxMeta: FxMeta | null = null;
+  let commodities: CommodityRow[] = [];
+  let commoditiesMeta: CommoditiesMeta | null = null;
 
   const supabase = createSupabaseAnonClientNullable();
   if (supabase) {
-    const row = await getFxDailyCache(supabase);
-    if (row) {
-      const live = cacheRowToQuoteRows(row);
+    const [fxRow, commoditiesRow] = await Promise.all([
+      getFxDailyCache(supabase),
+      getCommoditiesDailyCache(supabase),
+    ]);
+
+    if (fxRow) {
+      const live = cacheRowToQuoteRows(fxRow);
       if (live.length > 0) {
         currencies = live;
-        meta = {
-          rateDate: row.rate_date,
-          fetchedAt: row.fetched_at,
-          baseCurrency: row.base_currency,
+        fxMeta = {
+          rateDate: fxRow.rate_date,
+          fetchedAt: fxRow.fetched_at,
+          baseCurrency: fxRow.base_currency,
         };
+      }
+    }
+
+    if (commoditiesRow) {
+      const live = cacheRowToCommodityRows(commoditiesRow);
+      if (live.length > 0) {
+        commodities = live;
+        commoditiesMeta = { fetchedAt: commoditiesRow.fetched_at };
       }
     }
   }
@@ -46,11 +68,17 @@ export default async function MarketsPage() {
           Markets
         </h1>
         <p className="mt-4 text-sm leading-relaxed text-ink-muted sm:text-base">
-          Daily indicative currency crosses.
+          Daily indicative FX crosses and commodity benchmarks relevant to
+          Cameroon and the region.
         </p>
       </header>
 
-      <MarketsDashboard currencies={currencies} meta={meta} />
+      <MarketsDashboard
+        currencies={currencies}
+        fxMeta={fxMeta}
+        commodities={commodities}
+        commoditiesMeta={commoditiesMeta}
+      />
     </div>
   );
 }

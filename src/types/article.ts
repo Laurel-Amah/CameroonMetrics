@@ -1,10 +1,6 @@
-export type ArticleCategory =
-  | "Markets"
-  | "Policy"
-  | "Energy"
-  | "Banking"
-  | "Trade"
-  | "Tech";
+import type { ArticleCategory } from "@/lib/article-categories";
+
+export type { ArticleCategory };
 
 /** Original reporting / syndication credits (optional for desk originals). */
 export type ArticleSource = {

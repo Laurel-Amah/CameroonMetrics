@@ -1,4 +1,4 @@
-import type { ArticleCategory } from "@/types/article";
+import type { ArticleCategory } from "@/lib/article-categories";
 
 /** Pill styles for category labels on cards and in the UI */
 export const categoryTagClass: Record<ArticleCategory, string> = {
@@ -13,6 +13,12 @@ export const categoryTagClass: Record<ArticleCategory, string> = {
   Trade:
     "border-emerald-200 bg-emerald-50 text-emerald-950 ring-1 ring-inset ring-emerald-400/15",
   Tech: "border-violet-200 bg-violet-50 text-violet-950 ring-1 ring-inset ring-violet-400/15",
+  "Real Estate":
+    "border-rose-200 bg-rose-50 text-rose-950 ring-1 ring-inset ring-rose-400/15",
+  Agriculture:
+    "border-lime-200 bg-lime-50 text-lime-950 ring-1 ring-inset ring-lime-500/15",
+  Entrepreneurship:
+    "border-orange-200 bg-orange-50 text-orange-950 ring-1 ring-inset ring-orange-400/15",
 };
 
 /** Top border color on lead cards (mobile) */
@@ -23,6 +29,9 @@ export const categoryTopBorderClass: Record<ArticleCategory, string> = {
   Banking: "border-t-sky-500",
   Trade: "border-t-emerald-600",
   Tech: "border-t-violet-500",
+  "Real Estate": "border-t-rose-500",
+  Agriculture: "border-t-lime-600",
+  Entrepreneurship: "border-t-orange-500",
 };
 
 /** Vertical stripe on lead cards (desktop) */
@@ -33,6 +42,9 @@ export const categoryStripeBgClass: Record<ArticleCategory, string> = {
   Banking: "bg-sky-500",
   Trade: "bg-emerald-600",
   Tech: "bg-violet-500",
+  "Real Estate": "bg-rose-500",
+  Agriculture: "bg-lime-600",
+  Entrepreneurship: "bg-orange-500",
 };
 
 /** Inactive filter chip dot */
@@ -43,4 +55,7 @@ export const categoryDotClass: Record<ArticleCategory, string> = {
   Banking: "bg-sky-400",
   Trade: "bg-emerald-500",
   Tech: "bg-violet-400",
+  "Real Estate": "bg-rose-400",
+  Agriculture: "bg-lime-500",
+  Entrepreneurship: "bg-orange-400",
 };

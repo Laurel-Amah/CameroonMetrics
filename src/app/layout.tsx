@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Sans, Newsreader } from "next/font/google";
 import "./globals.css";
+import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 
 const fontSans = DM_Sans({
@@ -18,7 +19,7 @@ const fontSerif = Newsreader({
 export const metadata: Metadata = {
   title: "CameroonMetrics",
   description:
-    "Structured financial and business news for Cameroon and African markets.",
+    "Cameroon business news for owners, entrepreneurs, and young professionals—explained clearly.",
 };
 
 export default function RootLayout({
@@ -28,9 +29,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${fontSans.variable} ${fontSerif.variable}`}>
-      <body className="font-sans text-[15px] tracking-[0.012em] text-ink selection:bg-brand/15 selection:text-ink sm:text-base sm:tracking-normal">
+      <body className="flex min-h-screen flex-col font-sans text-[15px] tracking-[0.012em] text-ink selection:bg-brand/15 selection:text-ink sm:text-base sm:tracking-normal">
         <SiteHeader />
-        <main className="min-h-[calc(100vh-4.5rem)]">{children}</main>
+        <main className="min-h-[calc(100vh-4.5rem)] flex-1">{children}</main>
+        <SiteFooter />
       </body>
     </html>
   );

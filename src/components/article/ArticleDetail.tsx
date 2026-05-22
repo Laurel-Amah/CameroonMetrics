@@ -1,13 +1,16 @@
 import Image from "next/image";
-import type { Article } from "@/types/article";
+import type { Article, ArticlePreview } from "@/types/article";
 import { ArticleBackLink } from "@/components/article/ArticleBackLink";
 import { ArticleCredits } from "@/components/article/ArticleCredits";
+import { RelatedArticles } from "@/components/article/RelatedArticles";
 import { ArticleImageCredit } from "@/components/article/ArticleImageCredit";
+import { ARTICLE_SECTION_LABELS } from "@/lib/article-sections";
 import { categoryTagClass } from "@/lib/category-styles";
 import { formatArticleDate, formatRelativeArticleDate } from "@/lib/format-date";
 
 type Props = {
   article: Article;
+  related?: ArticlePreview[];
 };
 
 function Section({
@@ -29,7 +32,7 @@ function Section({
   );
 }
 
-export function ArticleDetail({ article }: Props) {
+export function ArticleDetail({ article, related = [] }: Props) {
   const tagClass = categoryTagClass[article.category];
   const absolute = formatArticleDate(article.publishedAt);
   const relative = formatRelativeArticleDate(article.publishedAt);
@@ -83,13 +86,13 @@ export function ArticleDetail({ article }: Props) {
         ) : null}
 
         <div className="mt-12 space-y-6 sm:mt-14 sm:space-y-7">
-          <Section kicker="What happened">
+          <Section kicker={ARTICLE_SECTION_LABELS.whatHappened}>
             <p className="text-pretty text-ink">{article.whatHappened}</p>
           </Section>
-          <Section kicker="Market Impact">
+          <Section kicker={ARTICLE_SECTION_LABELS.whyItMatters}>
             <p className="text-pretty text-ink">{article.whyItMatters}</p>
           </Section>
-          <Section kicker="Strategic Insight">
+          <Section kicker={ARTICLE_SECTION_LABELS.investorInsight}>
             <p className="text-pretty text-ink">{article.investorInsight}</p>
           </Section>
         </div>
@@ -101,6 +104,12 @@ export function ArticleDetail({ article }: Props) {
             citations={article.citations}
           />
         </div>
+
+        {related.length > 0 ? (
+          <div className="mt-12 sm:mt-14">
+            <RelatedArticles articles={related} category={article.category} />
+          </div>
+        ) : null}
 
         <footer className="mt-14 border-t border-line pt-10 sm:mt-16 sm:pt-12">
           <ArticleBackLink />

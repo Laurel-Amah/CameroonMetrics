@@ -1,13 +1,7 @@
 import { z } from "zod";
+import { ARTICLE_CATEGORIES } from "@/lib/article-categories";
 
-export const ARTICLE_CATEGORIES = [
-  "Markets",
-  "Policy",
-  "Energy",
-  "Banking",
-  "Trade",
-  "Tech",
-] as const;
+export { ARTICLE_CATEGORIES };
 
 export const aiArticleDraftSchema = z.object({
   title: z.string().max(200),

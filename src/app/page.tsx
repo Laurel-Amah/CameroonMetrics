@@ -1,5 +1,5 @@
+import { BusinessWireSection } from "@/components/home/BusinessWireSection";
 import { FeaturedStory } from "@/components/home/FeaturedStory";
-import { HomeArticleFeed } from "@/components/home/HomeArticleFeed";
 import { getPublishedPreviewsForPublicSite } from "@/lib/db/articles";
 import { pickFeaturedArticle } from "@/lib/home-feed";
 
@@ -26,12 +26,12 @@ export default async function HomePage() {
             Today&apos;s desk
           </p>
           <h1 className="mt-4 max-w-[22ch] font-serif text-[1.7rem] font-semibold leading-[1.14] tracking-[-0.02em] text-ink sm:max-w-none sm:text-4xl sm:leading-[1.08] sm:tracking-[-0.025em] lg:text-[2.45rem]">
-            Market-moving stories, distilled for{" "}
-            <span className="text-gradient-brand-accent">decision-makers</span>.
+            Cameroon business news, explained for{" "}
+            <span className="text-gradient-brand-accent">operators</span>.
           </h1>
           <p className="mt-6 max-w-2xl text-[0.97rem] leading-[1.65] text-ink-muted sm:text-[1.05rem] sm:leading-relaxed">
-            Curated coverage of Cameroon and the wider region—each analysis
-            covers what happened, market impact, and strategic insight for what
+            Built for business owners, entrepreneurs, and young professionals—each
+            briefing covers what happened, why it matters for commerce, and what
             to watch next.
           </p>
         </div>
@@ -39,46 +39,10 @@ export default async function HomePage() {
 
       {featured ? <FeaturedStory article={featured} /> : null}
 
-      <section
-        className="relative rounded-2xl border border-line bg-surface px-4 py-10 shadow-card ring-1 ring-brand/10 sm:rounded-[1.35rem] sm:px-9 sm:py-12 lg:px-11 lg:py-14"
-        aria-labelledby="feed-heading"
-      >
-        <div className="relative mb-11 border-b border-line pb-11 sm:mb-12 sm:pb-12">
-          <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-brand/35 to-transparent" />
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
-            <div className="space-y-3">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.34em] text-accent">
-                Wire · live desk
-              </p>
-              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <h2
-                  id="feed-heading"
-                  className="font-serif text-2xl font-semibold tracking-[-0.02em] text-ink sm:text-3xl sm:tracking-[-0.025em]"
-                >
-                  Market Wire
-                </h2>
-                <span className="hidden h-1.5 w-1.5 rounded-full bg-accent shadow-sm ring-2 ring-accent/20 sm:inline-block" />
-                <span className="text-sm font-semibold tabular-nums text-ink-muted">
-                  {articles.length} stories
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="h-0.5 flex-1 max-w-[9rem] rounded-full bg-gradient-to-r from-brand/40 via-accent/50 to-indigo-400/40 sm:max-w-[11rem]" />
-                <div className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent ring-2 ring-accent/20" />
-              </div>
-            </div>
-            <p className="max-w-md text-right text-[13px] leading-[1.6] text-ink-muted sm:text-sm">
-              Latest headlines from the desk—filter by category or open a full
-              briefing.
-            </p>
-          </div>
-        </div>
-
-        <HomeArticleFeed
-          articles={articles}
-          excludeArticleIds={wireExclude}
-        />
-      </section>
+      <BusinessWireSection
+        articles={articles}
+        excludeArticleIds={wireExclude}
+      />
     </div>
   );
 }

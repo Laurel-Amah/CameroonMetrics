@@ -6,7 +6,7 @@ import { getPublishedPreviewsForPublicSite } from "@/lib/db/articles";
 export const metadata: Metadata = {
   title: "Sectors · CameroonMetrics",
   description:
-    "Industry-organized coverage—banking, energy, agriculture, and more.",
+    "Cameroon business stories by sector—policy, real estate, agriculture, banking, and more.",
 };
 
 export const dynamic = "force-dynamic";
@@ -28,8 +28,8 @@ export default async function SectorsPage() {
           Sectors
         </h1>
         <p className="mt-4 text-sm leading-relaxed text-ink-muted sm:text-base">
-          Stories grouped by sector from the desk catalogue—useful for scanning
-          exposure across industries.
+          Stories grouped by industry—helpful if you run a business in a specific
+          sector or want to scan what is moving across the economy.
         </p>
       </header>
 

@@ -3,8 +3,10 @@ import { notFound } from "next/navigation";
 import { ArticleDetail } from "@/components/article/ArticleDetail";
 import {
   getArticleForPublicSite,
+  getPublishedPreviewsForPublicSite,
   listPublishedSlugsForStaticGeneration,
 } from "@/lib/db/articles";
+import { pickRelatedArticles } from "@/lib/related-articles";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -31,9 +33,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ArticlePage({ params }: PageProps) {
   const { id } = await params;
-  const article = await getArticleForPublicSite(id);
+  const [article, previews] = await Promise.all([
+    getArticleForPublicSite(id),
+    getPublishedPreviewsForPublicSite(),
+  ]);
   if (!article) {
     notFound();
   }
-  return <ArticleDetail article={article} />;
+  const related = pickRelatedArticles(article, previews);
+  return <ArticleDetail article={article} related={related} />;
 }

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { SourceFieldsEditor } from "@/components/admin/SourceFieldsEditor";
 import { ArticleCredits } from "@/components/article/ArticleCredits";
 import { ARTICLE_CATEGORIES } from "@/lib/ai/article-schema";
+import { ARTICLE_SECTION_LABELS } from "@/lib/article-sections";
 import {
   draftsToSourcesJson,
   normalizeSourceDraft,
@@ -291,7 +292,7 @@ export function DraftEditorForm({ initial }: Props) {
         <h2 className="font-serif text-lg font-semibold text-ink">Body</h2>
         <div>
           <label htmlFor="wh" className={labelClass}>
-            What happened
+            {ARTICLE_SECTION_LABELS.whatHappened}
           </label>
           <textarea
             id="wh"
@@ -303,7 +304,7 @@ export function DraftEditorForm({ initial }: Props) {
         </div>
         <div>
           <label htmlFor="wim" className={labelClass}>
-            Market impact
+            {ARTICLE_SECTION_LABELS.whyItMatters}
           </label>
           <textarea
             id="wim"
@@ -315,7 +316,7 @@ export function DraftEditorForm({ initial }: Props) {
         </div>
         <div>
           <label htmlFor="inv" className={labelClass}>
-            Strategic insight
+            {ARTICLE_SECTION_LABELS.investorInsight}
           </label>
           <textarea
             id="inv"
